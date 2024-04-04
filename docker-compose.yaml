@@ -1,6 +1,28 @@
 version: "3.7"
 
 services:
+  postgres:
+    image: postgres:16.2-alpine
+    container_name: db-pass-in
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=pass-in
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost -p 5432 --quiet || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pass-in
+
   api-pass-in:
     build:
       context: .
@@ -8,5 +30,14 @@ services:
     ports:
       - 3001:3333
     environment:
-      - DATABASE_URL=file:./db.sqlite
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/pass-in
       - API_BASE_URL=http://localhost:3333
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pass-in
+
+networks:
+  pass-in:
+    driver: bridge
