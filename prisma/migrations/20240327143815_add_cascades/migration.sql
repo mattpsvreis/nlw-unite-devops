@@ -1,7 +1,7 @@
 -- RedefineTables
 PRAGMA foreign_keys=OFF;
 CREATE TABLE "new_check_ins" (
-    "id" NOT NULL PRIMARY KEY serial,
+    "id" serial NOT NULL PRIMARY KEY,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "attendee_id" INTEGER NOT NULL,
     CONSTRAINT "check_ins_attendee_id_fkey" FOREIGN KEY ("attendee_id") REFERENCES "attendees" ("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -11,7 +11,7 @@ DROP TABLE "check_ins";
 ALTER TABLE "new_check_ins" RENAME TO "check_ins";
 CREATE UNIQUE INDEX "check_ins_attendee_id_key" ON "check_ins"("attendee_id");
 CREATE TABLE "new_attendees" (
-    "id" NOT NULL PRIMARY KEY serial,
+    "id" serial NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
