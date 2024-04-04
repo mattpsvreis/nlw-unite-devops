@@ -10,6 +10,8 @@ services:
       - POSTGRES_DB=pass-in
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+    volumes:
+      - "db:/var/lib/postgresql/data"
     healthcheck:
       test:
         [
